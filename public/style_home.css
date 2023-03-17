@@ -1,0 +1,109 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(36, 34, 34);
+    font-family: "JetBrains Mono", monospace;
+    min-height: 100vh;
+    text-align: center;
+    justify-content: center;
+}
+
+.nav-bar {
+    background-color: rgb(131, 114, 20);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 7.5vh;
+}
+
+.nav-bar button {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  height: 5vh;
+  width: 10vh;
+  justify-content: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: left;
+  font-size: 2vh;
+  font-weight: bold;
+  margin-top: 1vh;
+}
+
+.nav-bar button:not(:last-child) {
+    margin-right: 4%;
+}
+
+.background {
+    display: flex;   
+    background-color: darkolivegreen;
+    /* position: absolute; */
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.main {
+    margin-top: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 90%;
+    height: 30%;
+    max-height: 50%;
+    margin-top: -10rem;
+    flex-flow: row wrap;
+    gap: 5rem;
+}
+
+.main button {
+    width: 35vh;
+    height: 20vh;
+    cursor: pointer;
+    display: inline-block;
+    padding: 1em 2.1em 1.1em;
+    border-radius: 3px;
+    margin: 8px 8px 8px 8px;
+    color: #fbdedb;
+    background-color: #fbdedb;
+    /* #d48722 */
+    background: #186d08;
+    font-family: sans-serif;
+    font-weight: 800;
+    font-size: 2.5vh;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+    border-radius: 15%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3vh;
+    background-color: grey;
+    padding-bottom: 3rem;
+    font-size: 2.75vh;
+    font-weight: 800;
+    margin-top: 2rem;
+}

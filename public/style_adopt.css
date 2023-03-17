@@ -1,0 +1,162 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(36, 34, 34);
+    font-family: "JetBrains Mono", monospace;
+    min-height: 100vh;
+    text-align: center;
+    justify-content: center;
+}
+
+.nav-bar {
+    background-color: rgb(131, 114, 20);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4.25rem;
+}
+
+.nav-bar button {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  height: 3rem;
+  width: 15vh;
+  max-width: 25%;
+  justify-content: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: left;
+  font-size: 3vh;
+  font-weight: bold;
+  margin-top: 1vh;
+}
+
+.nav-bar button:hover {
+	transform: translateY(-1px);
+    background-color: rgb(179, 170, 170);
+    box-shadow: rgba(54, 45, 75, 0.4) 0 2px 4px,rgba(69, 60, 87, 0.3) 0 7px 13px -3px,#98989e 0 -3px 0 inset;
+}
+
+.nav-bar button:not(:last-child) {
+    margin-right: 4%;
+}
+
+.search {
+    display: flex;
+    height: 5rem;
+    width: 100%;
+    background-color: grey;
+    text-align: center;
+    justify-content: center;
+    gap: 5vh;
+
+    margin-top: 0.2 5rem;
+}
+
+.seach-description {
+    display: block;
+    font-weight: bold;
+}
+
+.search-pick {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #555;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.search-pick:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.searchBtn-container {
+    background-color: green;
+    height: 2rem;
+}
+
+#searchBtn {
+    height: 2rem;
+    width: 4rem;
+}
+
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    background-color: goldenrod;
+    height: 2rem;
+    text-align: center;
+}
+
+.sort-label {
+    display: block;
+    text-align: center;
+    margin-top: 0.35rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: fit-content;
+    background-color: rgb(168, 131, 9);
+    text-align: center;
+    justify-content: center;
+}
+
+#loading {
+    height: 50vh;
+    margin-top: 25vh;
+    font-size: 10vh;
+}
+
+.pet-cart {
+    width: 40rem;
+    height: 25vh;
+    background-color: darkgreen;
+    margin: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.pet-photo {
+    width: 80%;
+    height: 15vh;
+    margin: 1vw;
+}
+
+.pet-text {
+    max-width: 70%;
+    display: flex;
+    font-weight: bold;
+    font-size: 2.5vh;
+}
+
+.footer {
+    width: 100%;
+    height: 3vh;
+    background-color: grey;
+    padding-bottom: 3rem;
+    font-size: 2.75vh;
+    font-weight: 800;
+    margin-top: 4.5rem;
+}
