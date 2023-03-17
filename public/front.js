@@ -1,7 +1,7 @@
 const searchBtn = document.querySelector('#searchBtn')
 
 let params = ['any', 'any', 'any']
-let sort = document.querySelector('.sort-container').value
+let sort = "short"
 
 // Function that handles search filters
 function handleSearchChange(labelClass, changedElem) {
@@ -20,40 +20,48 @@ function handleSearchChange(labelClass, changedElem) {
     }
 }
 
+function sortChange(value) {
+    sort = value
+}
+
 // Search functionallity
 searchBtn.addEventListener('click', async () => {
     await axios.post('/post-params', {
         param1: params[0],
         param2: params[1],
-        param3: params[2]
+        param3: params[2],
+        sorting: sort
     }).catch((err) => {
         console.log(err)
     })
 
     const main = document.querySelector('.main')
     main.innerHTML = ''
-    const { data } = await axios.get('/adopt')
+    const { data } = await axios.get('/adopt').catch((err) => {
+        console.log(err)
+    })
 
-    // Converting date from ISO 8601 to string
     const formatedData = data.map(elem => ({
         type: elem.type,
         size: elem.size,
         breed: elem.breed,
-        here_since_date: new Date(elem.here_since_date).toLocaleDateString()
+        here_since_date: elem.here_since_date
+        // TODO: add time to here_since_date column
+        // Converting dates from ISO 8601 to strings
+        //new Date(elem.here_since_date).toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true})
     }))
     console.log(formatedData)
     for (let i = 0; i < formatedData.length; i++) {
-
         const divWrap = document.createElement('div')
         divWrap.classList.add('pet-cart')
 
-        // Adding image
+        // Adding images
         const animalPhoto = document.createElement('img')
         animalPhoto.src = `./jpg/${formatedData[i].type}.jpg`
         animalPhoto.classList.add('pet-photo')
         animalPhoto.alt = `Photo of ${formatedData[i].type}}`
 
-        // Adding description
+        // Adding descriptions
         let div = document.createElement('div')
         div.classList.add('pet-text')
         div.innerHTML = `Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
@@ -71,3 +79,4 @@ window.addEventListener('load', () => {
     const loadingDiv = document.querySelector('#loading')
     loadingDiv.style.display = "none"
 })
+

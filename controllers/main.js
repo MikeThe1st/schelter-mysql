@@ -2,13 +2,12 @@ const {connectDB} = require('../db/connect')
 const {generateQuery} = require('../db/query')
 
 let params = ["any", "any", "any"]
+let sort = "short"
 
 const getFilteredProducts = async (req, res) => {
     try {
-        const params = getParams()
         const pool = await connectDB()
-        // const connection = await pool.getConnection()
-        const [pets, fields] = await pool.query(generateQuery(params[0], params[1], params[2]))
+        const [pets, fields] = await pool.query(generateQuery(params, sort))
         .catch((err) => {
             console.log(err)
         })
@@ -27,16 +26,13 @@ const getFilteredProducts = async (req, res) => {
     }
 }
 
+// Posting data neeeded on server-side
 const postParams = async (req,res) => {
-    params =[req.body.param1]
+    params = [req.body.param1]
     params.push(req.body.param2)
     params.push(req.body.param3)
-    console.log(params)
-    res.send(params)
-}
-
-function getParams() {
-    return params
+    sort = req.body.sorting
+    res.status(200).send(params)
 }
 
 module.exports = { getFilteredProducts, postParams }

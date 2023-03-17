@@ -12,56 +12,63 @@
 
 <body>
     <div class="grid-container">
-        <div class="nav-bar">
-            <button class="home">Home</button>
-            <button class="adopt">Adopt</button>
-            <button class="contact">Contact</button>
-        </div>
-        <div class="search">
-            <div class="type">
-                <label class="search-description" for="select-type">Type</label>
-                <select class="search-pick" id="select-type"
-                    onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
-                    <option value="any" default>Any</option>
-                    <option value="cat">Cat</option>
-                    <option value="dog">Dog</option>
-                </select>
-            </div>
-            <div class="size">
-                <label class="search-description" for="select-size">Size</label>
-                <select class="search-pick" id="select-size"
-                    onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
-                    <option value="any" default>Any</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="big">Big</option>
-                </select>
-            </div>
-            <div class="breed">
-                <label class="search-description" for="select-breed">Breed</label>
-                <select class="search-pick" id="select-breed"
-                    onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
-                    <option value="any" default>Any</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-            </div>
-        </div>
-        <div class="searchBtn-container">
-            <button id="searchBtn" method="POST">Search</button>
-        </div>
-        <div class="sort-container">
-            <label class="sort-label" for="select-sort">Sort from: </label>
-            <select class="sort-pick" id="select-sort" onchange="console.log(this.options[this.selectedIndex].value)">
-                <option value="long" default>Longest staying</option>
-                <option value="short">Shortest staying</option>
+        <a class="nav-bar">
+            <a class="nav-link" href="/">
+                <button class="home">Home</button>
+            </a>
+            <a class="nav-link" href="/adopt.html">
+                <button class="adopt">Adopt</button>
+            </a>
+            <a class="nav-link" href="/contact.html">
+                <button class="contact" href="/contact">Contact</button>
+            </a>
+        </a>
+    </div>
+    <div class="search">
+        <div class="type">
+            <label class="search-description" for="select-type">Type</label>
+            <select class="search-pick" id="select-type"
+                onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
+                <option value="any" default>Any</option>
+                <option value="cat">Cat</option>
+                <option value="dog">Dog</option>
             </select>
         </div>
-        <div class="main">
-            <div id="loading">LOADING...</div>
-            <!-- ! APPENDING DB PETS HERE -->
+        <div class="size">
+            <label class="search-description" for="select-size">Size</label>
+            <select class="search-pick" id="select-size"
+                onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
+                <option value="any" default>Any</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="big">Big</option>
+            </select>
         </div>
-        <div class="footer">All rights reserved to Michal Borowski</div>
+        <div class="breed">
+            <label class="search-description" for="select-breed">Breed</label>
+            <select class="search-pick" id="select-breed"
+                onchange="handleSearchChange(this.id, this.options[this.selectedIndex])">
+                <option value="any" default>Any</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+    </div>
+    <div class="searchBtn-container">
+        <button id="searchBtn" method="POST">Search</button>
+    </div>
+    <div class="sort-container">
+        <label class="sort-label" for="select-sort">Sort from: </label>
+        <select class="sort-pick" id="select-sort" onchange="sortChange(this.options[this.selectedIndex].value)">
+            <option value="short" default>Shortest staying</option>
+            <option value="long">Longest staying</option>
+        </select>
+    </div>
+    <div class="main">
+        <div id="loading">LOADING...</div>
+        <!-- ! APPENDING DB PETS HERE -->
+    </div>
+    <div class="footer">All rights reserved to Michal Borowski</div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
         integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="

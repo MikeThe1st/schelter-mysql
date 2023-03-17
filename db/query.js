@@ -1,5 +1,8 @@
-function generateQuery(type, size, breed) {
-    let query = 'SELECT * FROM adopt' //"dog"
+function generateQuery(params, sorting) {
+    let type = params[0]
+    let size = params[1] 
+    let breed = params[2] 
+    let query = 'SELECT * FROM adopt'
     if(type != 'any') query += ` WHERE type = "${type}"`
     if(size != 'any') {
         if(type != 'any') query += ` AND size = "${size}"`
@@ -9,8 +12,10 @@ function generateQuery(type, size, breed) {
         if(type != 'any' || size != 'any') query += ` AND breed = "${breed}"`
         else query += ` WHERE breed = "${breed}"`
     }
+    if(sorting == 'long') query += ' ORDER BY here_since_date'
     query += ';'
-    console.log(query)
+    lastQeury = query
+    console.log(sorting, query)
     return query
 }
 

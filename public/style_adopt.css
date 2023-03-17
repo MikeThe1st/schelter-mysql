@@ -12,7 +12,7 @@ body {
     justify-content: center;
 }
 
-.nav-bar {
+.grid-container {
     background-color: rgb(131, 114, 20);
     top: 0;
     left: 0;
@@ -20,7 +20,11 @@ body {
     height: 4.25rem;
 }
 
-.nav-bar button {
+.nav-link {
+    text-decoration: none;
+}
+
+.nav-link button {
   align-items: center;
   appearance: none;
   background-color: #FCFCFD;
@@ -37,18 +41,18 @@ body {
   padding-left: 16px;
   padding-right: 16px;
   text-align: left;
-  font-size: 3vh;
+  font-size: 2.5vh;
   font-weight: bold;
   margin-top: 1vh;
 }
 
-.nav-bar button:hover {
+.nav-link button:hover {
 	transform: translateY(-1px);
     background-color: rgb(179, 170, 170);
     box-shadow: rgba(54, 45, 75, 0.4) 0 2px 4px,rgba(69, 60, 87, 0.3) 0 7px 13px -3px,#98989e 0 -3px 0 inset;
 }
 
-.nav-bar button:not(:last-child) {
+.nav-link button:not(:last-child) {
     margin-right: 4%;
 }
 
@@ -159,4 +163,5 @@ body {
     font-size: 2.75vh;
     font-weight: 800;
     margin-top: 4.5rem;
+    padding-top: 0.5rem;
 }

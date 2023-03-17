@@ -19,10 +19,6 @@ const port = process.env.PORT || 3000
 const start = async () => {
     try {
         app.listen(port, console.log(`Server is listening on port ${port}...`))
-
-        // const pool = await connectDB()
-        // const connection = await pool.getConnection()
-        // const [pets, fields] = await connection.query('SELECT * FROM adopt;')
     } catch (error) {
         console.log(error)
     }
