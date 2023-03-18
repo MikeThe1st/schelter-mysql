@@ -53,12 +53,10 @@ body {
 }
 
 .background {
-    display: flex;   
-    background-image: url("./jpg/index_background.jpg");
-    background-size: 100% 100%;
+    display: flex;
     box-sizing: border-box;
     width: 100%;
-    height: 100vh;
+    height: 90.7vh;
     z-index: -1;
     align-items: center;
     justify-content: center;
@@ -66,41 +64,41 @@ body {
     opacity: 0.75;
 }
 
-.main {
-    margin-top: 20rem;
+.login-form {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    background-color: #36395A;
+    height: 60vh;
+    width: 60vh;
+    padding: 5vw;
+    border-radius: 10%;
     justify-content: center;
     text-align: center;
-    max-width: 90%;
-    height: 30%;
-    max-height: 50%;
-    margin-top: -10rem;
-    flex-flow: row wrap;
-    gap: 5rem;
+    font-weight: bold;
 }
 
-.main button {
-    width: 35vh;
-    height: 20vh;
+.username {
+    display: block;
+    width: 50%;
+    height: 10%;
+    margin: 1rem auto;
+}
+
+.password {
+    display: block;
+    width: 50%;
+    height: 10%;
+    margin: 1rem auto;
+}
+
+.login-btn {
+    display: block;
+    width: 30%;
+    height: 10%;
+    margin: 2rem auto;
+    border-radius: 10%;
     cursor: pointer;
-    display: inline-block;
-    padding: 1em 2.1em 1.1em;
-    border-radius: 3px;
-    margin: 8px 8px 8px 8px;
-    color: #fbdedb;
-    background-color: #fbdedb;
-    background: #186d08;
-    font-family: sans-serif;
-    font-weight: 800;
-    font-size: 2.5vh;
-    text-transform: uppercase;
-    text-align: center;
-    -webkit-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
-    -moz-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
-    box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
-    border-radius: 15%;
-    opacity: 0.8;
+    background-color:  lightblue;
 }
 
 .footer {

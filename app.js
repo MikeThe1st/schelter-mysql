@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
-const mainRouter = require('./routes/main')
+const userRouter = require('./routes/user')
+const adminRouter = require('./routes/admin')
 const bodyParser = require('body-parser')
 
 app.use(express.static('./public'))
@@ -12,7 +13,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 // Routing
-app.use('/', mainRouter)
+app.use('/', userRouter)
+
+app.use('/login', adminRouter)
+// app.post('/login', (req, res) => {
+//     const { username, password } = req.body
+//     console.log(username, password)
+// })
 
 const port = process.env.PORT || 3000
 
