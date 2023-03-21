@@ -1,6 +1,8 @@
 const {connectDB} = require('../db/connect')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+const fs = require('fs')
+
 
 const login = async (req, res) => {
     // Getting username and password from client-side then decoding it and pasting as query params
@@ -16,6 +18,8 @@ const login = async (req, res) => {
             const encodedUsername = jwt.verify(rows[0].username, process.env.JWT_SECRET)
             const encodedPassword = jwt.verify(rows[0].password, process.env.JWT_SECRET)
             const token = decodedUsername
+            // Saving token to express-session
+            req.session.token = token
             res.status(200).send({encodedUsername, encodedPassword, token})
         }
     } catch (err) {
@@ -24,4 +28,30 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {login}
+const dashboard = async (req, res) => {
+    fs.readFile('./private/dashboard.html', 'utf-8', (err, data) => {
+        if (err) {
+            console.log(err)
+            res.status(500).send('Error loading page')
+        } 
+        else {
+            // res.status(200).send(data)
+            // res.writeHeader(200, {"Content-Type": "text/html"})
+            res.write(data)
+        }
+      })
+
+    //   fs.readFile('./private/style_dashboard.css', 'utf8', (err, data) => {
+    //     if (err) {
+    //       console.log(err)
+    //       res.status(500).send('Error loading CSS')
+    //     } else {
+    //       res.set('Content-Type', 'text/css');
+    //       res.status(200).send(data)
+    //     }
+    //   })
+    console.log('Welcome to admin dashboard')
+}
+
+
+module.exports = {login, dashboard}

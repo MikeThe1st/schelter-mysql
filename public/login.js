@@ -10,12 +10,12 @@ loginForm.addEventListener('submit', async (e) => {
     if(!username || !password) {
         alert('Please provide username and password')
     }
-
+    
     try {
         const {data} = await axios.post('/login', {username, password})
         if(data) {
             localStorage.setItem('token', data.token)
-            window.location.replace('/dashboard.html')
+            window.location.replace('/dashboard')
         }
     } catch (err) {
         console.log(err)

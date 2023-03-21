@@ -2,6 +2,8 @@ const express = require("express")
 const app = express()
 const mainRouter = require('./routes/main')
 const bodyParser = require('body-parser')
+const session = require('express-session')
+require('dotenv').config()
 
 app.use(express.static('./public'))
 app.use(express.json())
@@ -10,6 +12,13 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}))
 // parse application/json
 app.use(bodyParser.json())
+
+// Server side session storage
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+}))
 
 // Routing
 app.use('/', mainRouter)

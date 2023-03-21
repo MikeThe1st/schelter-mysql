@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style_home.css">
-    <title>Shelter</title>
+    <link rel="stylesheet" href="style_dashboard.css">
+    <title>Shelter - Admin dashboard</title>
 </head>
 
 <body>
@@ -25,16 +25,23 @@
     </div>
     <div class="background">
         <div class="main">
-            <a href="/adopt.html">
-                <button id="adoptBtn">Find a pet</button>
-            </a>
-            <a href="/contact.html">
-                <button id="contactBtn">Contact us</button>
-            </a>
+            <div class="main-text">Which database do you want to edit?</div>
+            <div class="button-container">
+                <a href="dashboard/to-adopt.html">
+                    <button id="adoptBtn">To adopt database</button>
+                </a>
+                <a href="dashboard/adopted.html">
+                    <button id="contactBtn">Adopted database</button>
+                </a>
+            </div>
         </div>
     </div>
     <div class="footer">All rights reserved to Michal Borowski</div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
 </body>
 
 </html>
