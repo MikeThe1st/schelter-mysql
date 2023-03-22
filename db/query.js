@@ -2,7 +2,7 @@ function generateQuery(params, sorting) {
     let type = params[0]
     let size = params[1] 
     let breed = params[2] 
-    let query = 'SELECT * FROM adopt'
+    let query = 'SELECT * FROM to_adopt'
     if(type != 'any') query += ` WHERE type = "${type}"`
     if(size != 'any') {
         if(type != 'any') query += ` AND size = "${size}"`

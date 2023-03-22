@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const fs = require('fs')
 
-
+// Logging user
 const login = async (req, res) => {
     // Getting username and password from client-side then decoding it and pasting as query params
     try {
@@ -28,28 +28,17 @@ const login = async (req, res) => {
     }
 }
 
+// Reading dashboard page
 const dashboard = async (req, res) => {
-    fs.readFile('./private/dashboard.html', 'utf-8', (err, data) => {
+    fs.readFile('./private/dashboard.html', (err, data) => {
         if (err) {
             console.log(err)
             res.status(500).send('Error loading page')
         } 
         else {
-            // res.status(200).send(data)
-            // res.writeHeader(200, {"Content-Type": "text/html"})
             res.write(data)
         }
       })
-
-    //   fs.readFile('./private/style_dashboard.css', 'utf8', (err, data) => {
-    //     if (err) {
-    //       console.log(err)
-    //       res.status(500).send('Error loading CSS')
-    //     } else {
-    //       res.set('Content-Type', 'text/css');
-    //       res.status(200).send(data)
-    //     }
-    //   })
     console.log('Welcome to admin dashboard')
 }
 

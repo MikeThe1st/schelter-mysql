@@ -12,5 +12,7 @@ router.route('/post-params').post(postParams)
 // Admin routes
 router.route('/login').post(login)
 router.route('/dashboard').get(authenticationMiddleware, dashboard)
+router.route('/dashboard/to-adopt').get(authenticationMiddleware)
+router.route('/dashboard/adopted').get(authenticationMiddleware)
 
 module.exports = router
