@@ -36,6 +36,7 @@ reloadBtn.addEventListener('click', async () => {
     for (let i = 0; i < formatedData.length; i++) {
         const divWrap = document.createElement('div')
         divWrap.classList.add('pet-cart')
+        divWrap.setAttribute('id', `Pet Cart ${formatedData[i].id}`)
 
         // Adding descriptions
         let div = document.createElement('div')
@@ -53,9 +54,12 @@ reloadBtn.addEventListener('click', async () => {
         let btnDelete = document.createElement('button')
         btnDelete.className = "btnDelete"
         btnDelete.innerHTML = "Delete"
-        btnDelete.addEventListener('click', (e) => {
+        btnDelete.addEventListener('click', async (e) => {
             e.preventDefault()
-            alert("Delete")
+            let btnId = btnDelete.parentNode.id.split(' ')[2]
+            let action = 'delete'
+            await axios.post('/dashboard/to-adopt', {action, btnId})
+            console.log(`Deleted pet with id: ${btnId}`)
         })
 
         // Appending divs

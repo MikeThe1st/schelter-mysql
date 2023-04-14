@@ -42,5 +42,21 @@ const dashboard = async (req, res) => {
     console.log('Welcome to admin dashboard')
 }
 
+const deletePet = async (req, res) => {
+    try {
+        const {action, btnId} = req.body
+        console.log(action, btnId)
+        const pool = await connectDB()
+        const [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}"`)
+        .catch((err) => {
+            console.log(err)
+        })
+        console.log(pets)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal server error')
+    }
+}
 
-module.exports = {login, dashboard}
+
+module.exports = {login, dashboard, deletePet}
