@@ -1,6 +1,6 @@
 const reloadBtn = document.querySelector('#reloadBtn')
+const insertBtn = document.querySelector('#insertBtn')
 
-let params = ['any', 'any', 'any']
 let sort = "short"
 
 function sortChange(value) {
@@ -8,12 +8,32 @@ function sortChange(value) {
     reloadBtn.click()
 }
 
-// Showing to-adopt db items on front end
+async function handlePet(action, btnId) {
+    const data = await axios.post('/dashboard/to-adopt', { action, btnId })
+    console.log(data)
+    return data
+}
+
+async function editPet(btnId) {
+    // Creating array with values that user want to change
+    let editParams = []
+    for (let i = 0; i < 5; i++) {
+        editParams.push(document.querySelectorAll('.edit-input')[i].value)
+    }
+    const action = 'edit'
+    const { data } = await axios.post('/dashboard/to-adopt', { action, btnId, editParams })
+    if (data) {
+        alert(data)
+        reloadBtn.click()
+    }
+}
+
+// Showing to_adopt db items on front end
 reloadBtn.addEventListener('click', async () => {
     await axios.post('/post-params', {
-        param1: params[0],
-        param2: params[1],
-        param3: params[2],
+        param1: document.querySelectorAll('.search-input')[1].value,
+        param2: document.querySelectorAll('.search-input')[2].value,
+        param3: document.querySelectorAll('.search-input')[3].value,
         sorting: sort
     }).catch((err) => {
         console.log(err)
@@ -50,23 +70,14 @@ reloadBtn.addEventListener('click', async () => {
         btnEdit.innerHTML = "Edit"
         btnEdit.addEventListener('click', async (e) => {
             e.preventDefault()
-            const btnId = btnEdit.parentNode.id.split(' ')[2]
+            const buttonId = btnEdit.parentNode.id.split(' ')[2]
             document.querySelector('#form-title').innerHTML = `Pet id:${btnId}`
             document.querySelector('.edit-container').style.visibility = 'visible'
             document.querySelector('#edit-submitBtn').onclick = async (e) => {
                 e.preventDefault()
-                let editParams = []
-                // Creating array with values that user want to change
-                for(let i = 0; i < 5; i++) {
-                    editParams.push(document.querySelectorAll('.edit-input')[i].value)
-                }
-                const action = 'edit'
-                const { data } = await axios.post('/dashboard/to-adopt', {action, btnId, editParams})
-                if(data) {
-                    alert(data)
-                    reloadBtn.click()
-                }
+                await editPet(buttonId)
             }
+
             document.querySelector('#edit-cancelBtn').onclick = (e) => {
                 e.preventDefault()
                 document.querySelector('.edit-container').style.visibility = 'hidden'
@@ -81,7 +92,7 @@ reloadBtn.addEventListener('click', async () => {
             e.preventDefault()
             const btnId = btnDelete.parentNode.id.split(' ')[2]
             let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
-            if(confirm(confiramtion)) {
+            if (confirm(confiramtion)) {
                 await handlePet('delete', btnId)
                 reloadBtn.click()
             }
@@ -106,15 +117,15 @@ reloadBtn.addEventListener('click', async () => {
     }
 })
 
-async function handlePet(action, btnId) {
-    const data = await axios.post('/dashboard/to-adopt', {action, btnId})
-    console.log(data)
-    return data
-}
-
-function editPet() {
-    // Edit pet data
-}
+insertBtn.addEventListener('click', async () => {
+    let insertParams = []
+    for (let i = 0; i < 4; i++) {
+        insertParams.push(document.querySelectorAll('.search-input')[i].value)
+    }
+    const { data } = await axios.post('/dashboard/insert-pet', { insertParams })
+    alert(data)
+    reloadBtn.click()
+})
 
 // First load of pets from DB
 window.addEventListener('load', () => {

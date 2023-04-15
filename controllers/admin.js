@@ -87,7 +87,6 @@ const adminActions = async (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
-            res.status(200).send(`Pet with id: ${btnId}, just got deleted.`)
         }
         else {
             res.status(404).send('Action not found.')
@@ -98,5 +97,17 @@ const adminActions = async (req, res) => {
     }
 }
 
+const insertPet = async (req, res) => {
+    try {
+        const { insertParams } = req.body
+        const pool = await connectDB()
+        const {data} = pool.execute(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
+        res.status(200).send(`New pet with id:${insertParams[0]} got created.`)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Internal server error')
+    }
+}
 
-module.exports = {login, dashboard, adminActions}
+
+module.exports = {login, dashboard, adminActions, insertPet}
