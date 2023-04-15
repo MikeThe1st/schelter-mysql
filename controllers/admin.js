@@ -45,12 +45,29 @@ const dashboard = async (req, res) => {
 const adminActions = async (req, res) => {
     try {
         const {action, btnId} = req.body
-        console.log(action, btnId)
         const pool = await connectDB()
 
         // Editing values of specyfic pet
         if(action == 'edit') {
-            // TODO: Edit here
+            const { editParams } = req.body
+            let [pet, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${editParams[0]}"`)
+            let editString = `UPDATE to_adopt SET `
+            let propertyCounter = 0, toEdit = false
+            if(pet.length === 1) {
+                for(let property in pet[0]) {
+                    if(editParams[propertyCounter]) {
+                        if(toEdit) {
+                            editString += ', '
+                        }
+                        toEdit = true
+                        editString += `${property}="${editParams[propertyCounter]}"`
+                        pet[0][property] = editParams[propertyCounter]
+                    }
+                    propertyCounter++
+                }
+                editString += ` WHERE id=${btnId};`
+                console.log(editString)
+            }
         }
         // If pet gets adopted then it gets removed from to_adopted and inserted into adopted DB
         else if(action == 'adopted') {

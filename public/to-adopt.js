@@ -33,6 +33,7 @@ reloadBtn.addEventListener('click', async () => {
         here_since_date: elem.here_since_date
     }))
     console.log(formatedData)
+
     for (let i = 0; i < formatedData.length; i++) {
         const divWrap = document.createElement('div')
         divWrap.classList.add('pet-cart')
@@ -49,12 +50,25 @@ reloadBtn.addEventListener('click', async () => {
         btnEdit.innerHTML = "Edit"
         btnEdit.addEventListener('click', async (e) => {
             e.preventDefault()
-            // await handlePet('edit', btnEdit.parentNode.id.split(' ')[2])
-            let type = prompt('Enter new type or leave empty if you do not want to change it')
-            let size = prompt('Enter new size or leave empty if you do not want to change it')
-            let breed = prompt('Enter new breed or leave empty if you do not want to change it')
-            let date = prompt('Enter new date or leave empty if you do not want to change it')
-            reloadBtn.click()
+            const btnId = btnEdit.parentNode.id.split(' ')[2]
+            document.querySelector('#form-title').innerHTML = `Pet id:${btnId}`
+            document.querySelector('.edit-container').style.visibility = 'visible'
+            document.querySelector('#edit-submitBtn').onclick = async (e) => {
+                e.preventDefault()
+                let editParams = []
+                for(let i = 0; i < 5; i++) {
+                    const input = document.querySelectorAll('.edit-input')[i].value
+                    editParams.push(input)
+                }
+                const action = 'edit'
+                const { data } = axios.post('/dashboard/to-adopt', {action, btnId, editParams})
+                if(data) alert(`Pet editted.`)
+            }
+            document.querySelector('#edit-cancelBtn').onclick = (e) => {
+                e.preventDefault()
+                document.querySelector('.edit-container').style.visibility = 'hidden'
+            } 
+            // reloadBtn.click()
         })
 
         let btnDelete = document.createElement('button')

@@ -64,31 +64,16 @@ body {
     text-align: center;
     justify-content: center;
     gap: 5vh;
-
     margin-top: 0.2 5rem;
 }
 
-.seach-description {
+.search-description {
     display: block;
     font-weight: bold;
 }
 
-.search-pick {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #555;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.search-pick:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+.search-input {
+    max-width: 25vw;
 }
 
 .insertBtn-container {
@@ -132,8 +117,8 @@ body {
 }
 
 .edit-container {
+    visibility: hidden;
     position: fixed;
-    /* justify-content: center; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -142,15 +127,28 @@ body {
     height: fit-content;
     background-color: rgb(168, 131, 9);
     padding: 2rem 0;
-    max-width: 90vw;
     font-weight: bold;
     font-size: 2vh;
     margin: 0 auto;
+    border: 0.25rem solid rgb(0, 0, 0);
+    box-shadow: rgba(236, 214, 13, 0.35) 0px 5px 15px;
+}
+
+.edit-form > label {
+    width: 5rem;
+}
+
+#form-title {
+    margin: -1rem 0 1.5rem 0;
+    font-size: 5vh;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .edit-input {
     display: block;
     width: 15rem;
+    max-width: 50%;
     margin: 0 auto;
 }
 
@@ -161,7 +159,7 @@ body {
 #edit-submitBtn {
     height: 2.5rem;
     width: 8rem;
-    margin-right: 3rem;
+    margin-right: 2rem;
     background-color: lightgreen;
     cursor: pointer;
 }
