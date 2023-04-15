@@ -127,8 +127,50 @@ body {
 
 #loading {
     height: 50vh;
-    margin-top: 25vh;
+    margin: 25vh;
     font-size: 10vh;
+}
+
+.edit-container {
+    position: fixed;
+    /* justify-content: center; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    background-color: rgb(168, 131, 9);
+    padding: 2rem 0;
+    max-width: 90vw;
+    font-weight: bold;
+    font-size: 2vh;
+    margin: 0 auto;
+}
+
+.edit-input {
+    display: block;
+    width: 15rem;
+    margin: 0 auto;
+}
+
+.edit-btns-container {
+    margin-top: 1.5rem;
+}
+
+#edit-submitBtn {
+    height: 2.5rem;
+    width: 8rem;
+    margin-right: 3rem;
+    background-color: lightgreen;
+    cursor: pointer;
+}
+
+#edit-cancelBtn {
+    height: 2.5rem;
+    width: 4rem;
+    background-color: red;
+    cursor: pointer;
 }
 
 .pet-cart {

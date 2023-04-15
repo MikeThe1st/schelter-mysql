@@ -26,15 +26,15 @@
     </div>
     <div class="search">
         <div class="type">
-            <label class="search-description">Type</label>
+            <label class="search-description" for="type">Type</label>
                 <input type="text">
         </div>
         <div class="size">
-            <label class="search-description">Size</label>
+            <label class="search-description" for="size">Size</label>
             <input type="text">
         </div>
         <div class="breed">
-            <label class="search-description">Breed</label>
+            <label class="search-description" for="breed">Breed</label>
             <input type="text">
         </div>
     </div>
@@ -52,6 +52,27 @@
     <div class="main">
         <div id="loading">LOADING...</div>
         <!-- ! APPENDING DB PETS HERE -->
+    </div>
+    <div class="edit-container">
+        <label for="id">Enter id if you want to change it:</label>
+        <input class="edit-input" type="text" placeholder="Clicked id here">
+
+        <label for="type">Enter type if you want to change it:</label>
+        <input class="edit-input" type="text" placeholder="Clicked type here">
+
+        <label for="size">Enter size if you want to change it:</label>
+        <input class="edit-input" type="text" placeholder="Clicked size here">
+
+        <label for="breed">Enter breed if you want to change it:</label>
+        <input class="edit-input" type="text" placeholder="Clicked breed here">
+
+        <label for="date">Enter date if you want to change it:</label>
+        <input class="edit-input" type="date" placeholder="Clicked date here">
+
+        <div class="edit-btns-container">
+            <button id="edit-submitBtn">Submit changes</button>
+            <button id="edit-cancelBtn">Cancel</button>
+        </div>
     </div>
     <div class="footer">All rights reserved to Michal Borowski</div>
     </div>
