@@ -44,7 +44,7 @@ reloadBtn.addEventListener('click', async () => {
         div.classList.add('pet-text')
         div.innerHTML = `Id:${formatedData[i].id} Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
 
-        // Adding admin buttons (edit, adopted and delete)
+        // Adding admin button edit
         let btnEdit = document.createElement('button')
         btnEdit.className = "btnEdit"
         btnEdit.innerHTML = "Edit"
@@ -56,30 +56,38 @@ reloadBtn.addEventListener('click', async () => {
             document.querySelector('#edit-submitBtn').onclick = async (e) => {
                 e.preventDefault()
                 let editParams = []
+                // Creating array with values that user want to change
                 for(let i = 0; i < 5; i++) {
-                    const input = document.querySelectorAll('.edit-input')[i].value
-                    editParams.push(input)
+                    editParams.push(document.querySelectorAll('.edit-input')[i].value)
                 }
                 const action = 'edit'
-                const { data } = axios.post('/dashboard/to-adopt', {action, btnId, editParams})
-                if(data) alert(`Pet editted.`)
+                const { data } = await axios.post('/dashboard/to-adopt', {action, btnId, editParams})
+                if(data) {
+                    alert(data)
+                    reloadBtn.click()
+                }
             }
             document.querySelector('#edit-cancelBtn').onclick = (e) => {
                 e.preventDefault()
                 document.querySelector('.edit-container').style.visibility = 'hidden'
-            } 
-            // reloadBtn.click()
+            }
         })
 
+        // Adding admin button delete
         let btnDelete = document.createElement('button')
         btnDelete.className = "btnDelete"
         btnDelete.innerHTML = "Delete"
         btnDelete.addEventListener('click', async (e) => {
             e.preventDefault()
-            await handlePet('delete', btnDelete.parentNode.id.split(' ')[2])
-            reloadBtn.click()
+            const btnId = btnDelete.parentNode.id.split(' ')[2]
+            let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
+            if(confirm(confiramtion)) {
+                await handlePet('delete', btnId)
+                reloadBtn.click()
+            }
         })
 
+        // Adding admin button adopted
         let btnAdopted = document.createElement('button')
         btnAdopted.className = "btnAdopted"
         btnAdopted.innerHTML = "Adopted"

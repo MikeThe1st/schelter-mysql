@@ -50,23 +50,26 @@ const adminActions = async (req, res) => {
         // Editing values of specyfic pet
         if(action == 'edit') {
             const { editParams } = req.body
-            let [pet, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${editParams[0]}"`)
+            let [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}"`)
             let editString = `UPDATE to_adopt SET `
             let propertyCounter = 0, toEdit = false
-            if(pet.length === 1) {
-                for(let property in pet[0]) {
+            if(pets.length === 1) {
+                for(let property in pets[0]) {
                     if(editParams[propertyCounter]) {
                         if(toEdit) {
                             editString += ', '
                         }
                         toEdit = true
                         editString += `${property}="${editParams[propertyCounter]}"`
-                        pet[0][property] = editParams[propertyCounter]
                     }
                     propertyCounter++
                 }
                 editString += ` WHERE id=${btnId};`
                 console.log(editString)
+                await pool.query(editString).catch((err) => {
+                    console.log(err)
+                })
+                res.status(200).send(`Pet with id:${btnId} got edited.`)
             }
         }
         // If pet gets adopted then it gets removed from to_adopted and inserted into adopted DB
@@ -75,8 +78,7 @@ const adminActions = async (req, res) => {
             if(pets.length == 1) {
                 await pool.query(`DELETE FROM to_adopt WHERE id="${btnId}";`)
                 await pool.query(`INSERT INTO adopted VALUES(${btnId}, "${pets[0].type}", "${pets[0].size}", "${pets[0].breed}", "${pets[0].here_since_date.toLocaleDateString()}");`)
-                const [test, fields] = await pool.query(`SELECT * FROM adopted WHERE id=${btnId};`)
-                console.log(test)
+                res.status(200).send(`Pet with id:${btnId} got adopted.`)
             }
         }
         // Deleting single pet (used in case of mistake)
