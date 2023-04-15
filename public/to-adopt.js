@@ -41,37 +41,53 @@ reloadBtn.addEventListener('click', async () => {
         // Adding descriptions
         let div = document.createElement('div')
         div.classList.add('pet-text')
-        div.innerHTML = `ID:${formatedData[i].id} Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
+        div.innerHTML = `Id:${formatedData[i].id} Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
 
-        // Adding admin buttons (delete and edit)
+        // Adding admin buttons (edit, adopted and delete)
         let btnEdit = document.createElement('button')
         btnEdit.className = "btnEdit"
         btnEdit.innerHTML = "Edit"
-        btnEdit.addEventListener('click', (e) => {
+        btnEdit.addEventListener('click', async (e) => {
             e.preventDefault()
-            alert("Edit")
+            // await handlePet('edit', btnEdit.parentNode.id.split(' ')[2])
+            let type = prompt('Enter new type or leave empty if you do not want to change it')
+            let size = prompt('Enter new size or leave empty if you do not want to change it')
+            let breed = prompt('Enter new breed or leave empty if you do not want to change it')
+            let date = prompt('Enter new date or leave empty if you do not want to change it')
+            reloadBtn.click()
         })
+
         let btnDelete = document.createElement('button')
         btnDelete.className = "btnDelete"
         btnDelete.innerHTML = "Delete"
         btnDelete.addEventListener('click', async (e) => {
             e.preventDefault()
-            let btnId = btnDelete.parentNode.id.split(' ')[2]
-            let action = 'delete'
-            await axios.post('/dashboard/to-adopt', {action, btnId})
-            console.log(`Deleted pet with id: ${btnId}`)
+            await handlePet('delete', btnDelete.parentNode.id.split(' ')[2])
+            reloadBtn.click()
+        })
+
+        let btnAdopted = document.createElement('button')
+        btnAdopted.className = "btnAdopted"
+        btnAdopted.innerHTML = "Adopted"
+        btnAdopted.addEventListener('click', async (e) => {
+            e.preventDefault()
+            await handlePet('adopted', btnAdopted.parentNode.id.split(' ')[2])
+            reloadBtn.click()
         })
 
         // Appending divs
         main.appendChild(divWrap)
         divWrap.appendChild(div)
         divWrap.appendChild(btnEdit)
+        divWrap.appendChild(btnAdopted)
         divWrap.appendChild(btnDelete)
     }
 })
 
-function deletePet() {
-    // Delete pet from DB
+async function handlePet(action, btnId) {
+    const data = await axios.post('/dashboard/to-adopt', {action, btnId})
+    console.log(data)
+    return data
 }
 
 function editPet() {

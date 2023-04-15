@@ -42,16 +42,37 @@ const dashboard = async (req, res) => {
     console.log('Welcome to admin dashboard')
 }
 
-const deletePet = async (req, res) => {
+const adminActions = async (req, res) => {
     try {
         const {action, btnId} = req.body
         console.log(action, btnId)
         const pool = await connectDB()
-        const [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}"`)
-        .catch((err) => {
-            console.log(err)
-        })
-        console.log(pets)
+
+        // Editing values of specyfic pet
+        if(action == 'edit') {
+            // TODO: Edit here
+        }
+        // If pet gets adopted then it gets removed from to_adopted and inserted into adopted DB
+        else if(action == 'adopted') {
+            const [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}";`)
+            if(pets.length == 1) {
+                await pool.query(`DELETE FROM to_adopt WHERE id="${btnId}";`)
+                await pool.query(`INSERT INTO adopted VALUES(${btnId}, "${pets[0].type}", "${pets[0].size}", "${pets[0].breed}", "${pets[0].here_since_date.toLocaleDateString()}");`)
+                const [test, fields] = await pool.query(`SELECT * FROM adopted WHERE id=${btnId};`)
+                console.log(test)
+            }
+        }
+        // Deleting single pet (used in case of mistake)
+        else if(action == 'delete') {
+            await pool.query(`DELETE FROM to_adopt WHERE id="${btnId}";`)
+            .catch((err) => {
+                console.log(err)
+            })
+            res.status(200).send(`Pet with id: ${btnId}, just got deleted.`)
+        }
+        else {
+            res.status(404).send('Action not found.')
+        }
     } catch (err) {
         console.log(err)
         res.status(500).send('Internal server error')
@@ -59,4 +80,4 @@ const deletePet = async (req, res) => {
 }
 
 
-module.exports = {login, dashboard, deletePet}
+module.exports = {login, dashboard, adminActions}
