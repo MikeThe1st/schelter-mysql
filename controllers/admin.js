@@ -2,7 +2,8 @@ const {connectDB} = require('../db/connect')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const fs = require('fs')
-let params = ['','','','']
+let params = []
+let currentDb = undefined
 
 // Logging user
 const login = async (req, res) => {
@@ -45,14 +46,16 @@ const dashboard = async (req, res) => {
 
 const adminActions = async (req, res) => {
     try {
-        const {action, btnId} = req.body
+        const {action, btnId, db} = req.body
         const pool = await connectDB()
+        if(db) currentDb = db
 
         // Editing values of specyfic pet
         if(action == 'edit') {
             const { editParams } = req.body
-            let [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}"`)
-            let editString = `UPDATE to_adopt SET `
+            let [pets, fields] = await pool.query(`SELECT * FROM ${currentDb} WHERE id="${btnId}"`)
+            
+            let editString = `UPDATE ${currentDb} SET `
             let propertyCounter = 0, toEdit = false
             if(pets.length === 1) {
                 for(let property in pets[0]) {
@@ -70,21 +73,29 @@ const adminActions = async (req, res) => {
                 await pool.query(editString).catch((err) => {
                     console.log(err)
                 })
+
                 res.status(200).send(`Pet with id:${btnId} got edited.`)
             }
         }
+
         // If pet gets adopted then it gets removed from to_adopted and inserted into adopted DB
         else if(action == 'adopted') {
-            const [pets, fields] = await pool.query(`SELECT * FROM to_adopt WHERE id="${btnId}";`)
+            const [pets, fields] = await pool.query(`SELECT * FROM ${currentDb} WHERE id="${btnId}";`)
             if(pets.length == 1) {
-                await pool.query(`DELETE FROM to_adopt WHERE id="${btnId}";`)
-                await pool.query(`INSERT INTO adopted VALUES(${btnId}, "${pets[0].type}", "${pets[0].size}", "${pets[0].breed}", "${pets[0].here_since_date.toLocaleDateString()}");`)
+                await pool.query(`DELETE FROM ${currentDb} WHERE id="${btnId}";`)
+
+                let opositeDb = undefined
+                if(currentDb == 'to_adopt') opositeDb = 'adopted'
+                else opositeDb = 'to_adopt'
+
+                await pool.query(`INSERT INTO ${opositeDb} VALUES(${btnId}, "${pets[0].type}", "${pets[0].size}", "${pets[0].breed}", "${pets[0].here_since_date.toLocaleDateString()}");`)
                 res.status(200).send(`Pet with id:${btnId} got adopted.`)
             }
         }
+
         // Deleting single pet (used in case of mistake)
         else if(action == 'delete') {
-            await pool.query(`DELETE FROM to_adopt WHERE id="${btnId}";`)
+            await pool.query(`DELETE FROM ${currentDb} WHERE id="${btnId}";`)
             .catch((err) => {
                 console.log(err)
             })
@@ -103,6 +114,7 @@ const insertPet = async (req, res) => {
         const { insertParams } = req.body
         const pool = await connectDB()
         const {data} = pool.query(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
+
         res.status(200).send(`New pet with id:${insertParams[0]} got created.`)
     } catch (err) {
         console.log(err)
@@ -120,12 +132,12 @@ const adminSearch = async (req, res) => {
 
         // Generating query
         let edited = false
-        let queryString = `SELECT * FROM to_adopt`
-        if(params[0]) {
+        let queryString = `SELECT * FROM ${currentDb}`
+        if(params[0] != '') {
             queryString += ` WHERE id=${params[0]}`
             edited = true
         }
-        if(params[1]) {
+        if(params[1] != '') {
             if(edited) {
                 queryString += ` AND type="${params[1]}"`
             }
@@ -134,7 +146,7 @@ const adminSearch = async (req, res) => {
                 edited = true
             }
         } 
-        if(params[2]) {
+        if(params[2] != '') {
             if(edited) {
                 queryString += ` AND size="${params[2]}"`
             }
@@ -143,7 +155,7 @@ const adminSearch = async (req, res) => {
                 edited = true
             }
         } 
-        if(params[3]) {
+        if(params[3] != '') {
             if(edited) {
                 queryString += ` AND breed="${params[3]}"`
             }
@@ -165,6 +177,7 @@ const adminSearch = async (req, res) => {
             here_since_date: new Date(pet.here_since_date).toLocaleDateString()
         }))
         console.log(formatedData)
+
         res.status(200).json(formatedData)
     } catch (error) {
         console.log(error)
@@ -173,11 +186,20 @@ const adminSearch = async (req, res) => {
 }
 
 const postInputs = async (req, res) => {
-    const { inputs } = req.body
-    for(let i = 0; i < 4; i++) {
-        params[i] = inputs[i]
+    try {
+        const { db, inputs, editParams } = req.body
+        // if(!editParams) {
+            params = inputs    
+        // }
+        // else {
+        //     params = editParams
+        //     console.log("Hello world")
+        // }
+        currentDb = db
+        res.status(200).send(`Posted inputs: ${params}`) 
+    } catch (err) {
+        console.log(err)
     }
-    res.status(200).send('Params posted.')
 }
 
 

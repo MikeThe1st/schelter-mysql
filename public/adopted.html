@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_adopted.css">
+    <script defer src="adopted.js"></script>
+    <title>Shelter - edit adopted database</title>
+</head>
+
+<body>
+    <div class="grid-container">
+        <a class="nav-bar">
+            <a class="nav-link" href="/">
+                <button class="home">Home</button>
+            </a>
+            <a class="nav-link" href="/adopt.html">
+                <button class="adopt">Adopt</button>
+            </a>
+            <a class="nav-link" href="/contact.html">
+                <button class="contact">Contact</button>
+            </a>
+        </a>
+    </div>
+    <div class="search">
+        <div class="id">
+            <label class="search-description" for="id">Id</label>
+            <input class="search-input" type="number" min="1">
+        </div>
+        <div class="type">
+            <label class="search-description" for="type">Type</label>
+            <input class="search-input" type="text">
+        </div>
+        <div class="size">
+            <label class="search-description" for="size">Size</label>
+            <input class="search-input" type="text">
+        </div>
+        <div class="breed">
+            <label class="search-description" for="breed">Breed</label>
+            <input class="search-input" type="text">
+        </div>
+    </div>
+    <div class="searchBtn-container">
+        <button id="searchBtn">Search</button>
+    </div>
+    <div class="sort-container">
+        <label class="sort-label" for="select-sort">Sort from: </label>
+        <select class="sort-pick" id="select-sort" onchange="sortChange(this.options[this.selectedIndex].value)">
+            <option value="short" default>Shortest staying</option>
+            <option value="long">Longest staying</option>
+        </select>
+    </div>
+    <div class="main">
+        <div id="loading">LOADING...</div>
+        <!-- ! APPENDING DB PETS HERE -->
+    </div>
+    <div class="edit-container">
+        <div id="form-title">Edit pet form</div>
+        <form class="edit-form">
+            <label for="id">Enter id if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked id here">
+
+            <label for="type">Enter type if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked type here">
+
+            <label for="size">Enter size if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked size here">
+
+            <label for="breed">Enter breed if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked breed here">
+
+            <label for="date">Enter date if you want to change it:</label>
+            <input class="edit-input" type="date" placeholder="Clicked date here">
+
+            <div class="edit-btns-container">
+                <button id="edit-submitBtn" >Submit changes</button>
+                <button id="edit-cancelBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="footer">All rights reserved to Michal Borowski</div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>

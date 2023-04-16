@@ -9,7 +9,7 @@ function sortChange(value) {
 }
 
 async function handlePet(action, btnId) {
-    const data = await axios.post('/dashboard/to-adopt/search', { action, btnId })
+    const data = await axios.post('/dashboard/post-inputs', { action, btnId })
     console.log(data)
     return data
 }
@@ -21,23 +21,88 @@ async function editPet(btnId) {
         editParams.push(document.querySelectorAll('.edit-input')[i].value)
     }
     const action = 'edit'
-    const { data } = await axios.post('/dashboard/to-adopt/search', { action, btnId, editParams })
+    const db ='to_adopt'
+    const data = await axios.put('/dashboard/edit-pet', { action, db, editParams, btnId })
     if (data) {
-        alert(data)
+        console.log(data)
+        document.querySelector('#edit-cancelBtn').click()
         searchBtn.click()
     }
 }
 
-// Showing to_adopt db items on front end
-searchBtn.addEventListener('click', async () => {
+async function handleInputs() {
     let DOMinputs = document.querySelectorAll('.search-input')
     let inputs = []
-    for(let i = 0; i < DOMinputs.length; i++) {
+    for (let i = 0; i < DOMinputs.length; i++) {
         inputs.push(DOMinputs[i].value)
     }
+    const db = 'to_adopt'
+    action = 'post'
+    let temp = await axios.post('/dashboard/post-inputs', { inputs, db, action })
+    return temp
+}
 
-    const test = await axios.post('/dashboard/to-adopt/search', { inputs })
-    console.log(test)
+function handleDescription(data, i) {
+    let petText = document.createElement('div')
+    petText.classList.add('pet-text')
+    petText.innerHTML = `Id:${data[i].id} Type:${data[i].type} Size:${data[i].size} Breed:${data[i].breed}`
+    return petText
+}
+
+function editBtn() {
+    let btnEdit = document.createElement('button')
+    btnEdit.className = "btnEdit"
+    btnEdit.innerHTML = "Edit"
+    btnEdit.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const btnId = btnEdit.parentNode.id.split(' ')[2]
+        document.querySelector('#form-title').innerHTML = `Pet id:${btnId}`
+        document.querySelector('.edit-container').style.visibility = 'visible'
+        document.querySelector('#edit-submitBtn').onclick = async (e) => {
+            e.preventDefault()
+            await editPet(btnId)
+        }
+
+        document.querySelector('#edit-cancelBtn').onclick = (e) => {
+            e.preventDefault()
+            document.querySelector('.edit-container').style.visibility = 'hidden'
+        }
+    })
+    return btnEdit
+}
+
+function adoptBtn() {
+    let btnAdopted = document.createElement('button')
+    btnAdopted.className = "btnAdopted"
+    btnAdopted.innerHTML = "Adopted"
+    btnAdopted.addEventListener('click', async (e) => {
+        e.preventDefault()
+        await handlePet('adopted', btnAdopted.parentNode.id.split(' ')[2])
+        searchBtn.click()
+    })
+    return btnAdopted
+}
+
+function deleteBtn() {
+    let btnDelete = document.createElement('button')
+    btnDelete.className = "btnDelete"
+    btnDelete.innerHTML = "Delete"
+    btnDelete.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const btnId = btnDelete.parentNode.id.split(' ')[2]
+        let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
+        if (confirm(confiramtion)) {
+            await handlePet('delete', btnId)
+            searchBtn.click()
+        }
+    })
+    return btnDelete
+}
+
+// Showing to_adopt db items on front end
+searchBtn.addEventListener('click', async () => {
+    let inputs = await handleInputs()
+    // let parsedData = JSON.parse(inputs.config.data).inputs
 
     const main = document.querySelector('.main')
     main.innerHTML = ''
@@ -60,57 +125,20 @@ searchBtn.addEventListener('click', async () => {
         divWrap.setAttribute('id', `Pet Cart ${formatedData[i].id}`)
 
         // Adding descriptions
-        let div = document.createElement('div')
-        div.classList.add('pet-text')
-        div.innerHTML = `Id:${formatedData[i].id} Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
+        let petDescription = handleDescription(formatedData, i)
 
         // Adding admin button edit
-        let btnEdit = document.createElement('button')
-        btnEdit.className = "btnEdit"
-        btnEdit.innerHTML = "Edit"
-        btnEdit.addEventListener('click', async (e) => {
-            e.preventDefault()
-            const buttonId = btnEdit.parentNode.id.split(' ')[2]
-            document.querySelector('#form-title').innerHTML = `Pet id:${btnId}`
-            document.querySelector('.edit-container').style.visibility = 'visible'
-            document.querySelector('#edit-submitBtn').onclick = async (e) => {
-                e.preventDefault()
-                await editPet(buttonId)
-            }
-
-            document.querySelector('#edit-cancelBtn').onclick = (e) => {
-                e.preventDefault()
-                document.querySelector('.edit-container').style.visibility = 'hidden'
-            }
-        })
-
-        // Adding admin button delete
-        let btnDelete = document.createElement('button')
-        btnDelete.className = "btnDelete"
-        btnDelete.innerHTML = "Delete"
-        btnDelete.addEventListener('click', async (e) => {
-            e.preventDefault()
-            const btnId = btnDelete.parentNode.id.split(' ')[2]
-            let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
-            if (confirm(confiramtion)) {
-                await handlePet('delete', btnId)
-                searchBtn.click()
-            }
-        })
-
+        let btnEdit = editBtn()
+        
         // Adding admin button adopted
-        let btnAdopted = document.createElement('button')
-        btnAdopted.className = "btnAdopted"
-        btnAdopted.innerHTML = "Adopted"
-        btnAdopted.addEventListener('click', async (e) => {
-            e.preventDefault()
-            await handlePet('adopted', btnAdopted.parentNode.id.split(' ')[2])
-            searchBtn.click()
-        })
+        let btnAdopted = adoptBtn()
+        
+        // Adding admin button delete
+        let btnDelete = deleteBtn()
 
         // Appending divs
         main.appendChild(divWrap)
-        divWrap.appendChild(div)
+        divWrap.appendChild(petDescription)
         divWrap.appendChild(btnEdit)
         divWrap.appendChild(btnAdopted)
         divWrap.appendChild(btnDelete)
@@ -121,7 +149,7 @@ insertBtn.addEventListener('click', async () => {
     let insertParams = []
     let inputs = document.querySelectorAll('.search-input')
     for (let i = 0; i < 4; i++) {
-        if(!inputs[i].value) return alert('Please provide all data to add pet.')
+        if (!inputs[i].value) return alert('Please provide all data to add pet.')
         insertParams.push(inputs[i].value)
     }
     const { data } = await axios.post('/dashboard/insert-pet', { insertParams })
