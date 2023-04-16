@@ -1,15 +1,15 @@
-const reloadBtn = document.querySelector('#reloadBtn')
+const searchBtn = document.querySelector('#searchBtn')
 const insertBtn = document.querySelector('#insertBtn')
 
 let sort = "short"
 
 function sortChange(value) {
     sort = value
-    reloadBtn.click()
+    searchBtn.click()
 }
 
 async function handlePet(action, btnId) {
-    const data = await axios.post('/dashboard/to-adopt', { action, btnId })
+    const data = await axios.post('/dashboard/to-adopt/search', { action, btnId })
     console.log(data)
     return data
 }
@@ -21,27 +21,27 @@ async function editPet(btnId) {
         editParams.push(document.querySelectorAll('.edit-input')[i].value)
     }
     const action = 'edit'
-    const { data } = await axios.post('/dashboard/to-adopt', { action, btnId, editParams })
+    const { data } = await axios.post('/dashboard/to-adopt/search', { action, btnId, editParams })
     if (data) {
         alert(data)
-        reloadBtn.click()
+        searchBtn.click()
     }
 }
 
 // Showing to_adopt db items on front end
-reloadBtn.addEventListener('click', async () => {
-    await axios.post('/post-params', {
-        param1: document.querySelectorAll('.search-input')[1].value,
-        param2: document.querySelectorAll('.search-input')[2].value,
-        param3: document.querySelectorAll('.search-input')[3].value,
-        sorting: sort
-    }).catch((err) => {
-        console.log(err)
-    })
+searchBtn.addEventListener('click', async () => {
+    let DOMinputs = document.querySelectorAll('.search-input')
+    let inputs = []
+    for(let i = 0; i < DOMinputs.length; i++) {
+        inputs.push(DOMinputs[i].value)
+    }
+
+    const test = await axios.post('/dashboard/to-adopt/search', { inputs })
+    console.log(test)
 
     const main = document.querySelector('.main')
     main.innerHTML = ''
-    const { data } = await axios.get('/adopt').catch((err) => {
+    const { data } = await axios.get('/dashboard/to-adopt/search').catch((err) => {
         console.log(err)
     })
 
@@ -94,7 +94,7 @@ reloadBtn.addEventListener('click', async () => {
             let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
             if (confirm(confiramtion)) {
                 await handlePet('delete', btnId)
-                reloadBtn.click()
+                searchBtn.click()
             }
         })
 
@@ -105,7 +105,7 @@ reloadBtn.addEventListener('click', async () => {
         btnAdopted.addEventListener('click', async (e) => {
             e.preventDefault()
             await handlePet('adopted', btnAdopted.parentNode.id.split(' ')[2])
-            reloadBtn.click()
+            searchBtn.click()
         })
 
         // Appending divs
@@ -119,17 +119,19 @@ reloadBtn.addEventListener('click', async () => {
 
 insertBtn.addEventListener('click', async () => {
     let insertParams = []
+    let inputs = document.querySelectorAll('.search-input')
     for (let i = 0; i < 4; i++) {
-        insertParams.push(document.querySelectorAll('.search-input')[i].value)
+        if(!inputs[i].value) return alert('Please provide all data to add pet.')
+        insertParams.push(inputs[i].value)
     }
     const { data } = await axios.post('/dashboard/insert-pet', { insertParams })
     alert(data)
-    reloadBtn.click()
+    searchBtn.click()
 })
 
 // First load of pets from DB
 window.addEventListener('load', () => {
-    reloadBtn.click()
+    searchBtn.click()
     const loadingDiv = document.querySelector('#loading')
     loadingDiv.style.display = "none"
 })

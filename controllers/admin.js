@@ -2,6 +2,7 @@ const {connectDB} = require('../db/connect')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const fs = require('fs')
+let params = ['','','','']
 
 // Logging user
 const login = async (req, res) => {
@@ -101,7 +102,7 @@ const insertPet = async (req, res) => {
     try {
         const { insertParams } = req.body
         const pool = await connectDB()
-        const {data} = pool.execute(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
+        const {data} = pool.query(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
         res.status(200).send(`New pet with id:${insertParams[0]} got created.`)
     } catch (err) {
         console.log(err)
@@ -109,5 +110,75 @@ const insertPet = async (req, res) => {
     }
 }
 
+const adminSearch = async (req, res) => {
+    try {
+        const pool = await connectDB()
+        .catch((err) => {
+            console.log(err)
+        })
+        console.log(params)
 
-module.exports = {login, dashboard, adminActions, insertPet}
+        // Generating query
+        let edited = false
+        let queryString = `SELECT * FROM to_adopt`
+        if(params[0]) {
+            queryString += ` WHERE id=${params[0]}`
+            edited = true
+        }
+        if(params[1]) {
+            if(edited) {
+                queryString += ` AND type="${params[1]}"`
+            }
+            else {
+                queryString += ` WHERE type="${params[1]}"`
+                edited = true
+            }
+        } 
+        if(params[2]) {
+            if(edited) {
+                queryString += ` AND size="${params[2]}"`
+            }
+            else {
+                queryString += ` WHERE size="${params[2]}"`
+                edited = true
+            }
+        } 
+        if(params[3]) {
+            if(edited) {
+                queryString += ` AND breed="${params[3]}"`
+            }
+            else {
+                queryString += ` WHERE breed="${params[3]}"`
+                edited = true
+            }
+        }
+        queryString += `;`
+        console.log(queryString)
+        const [pets, fields] = await pool.query(queryString)
+
+        const formatedData = pets.map(pet => ({
+            id: pet.id,
+            type: pet.type,
+            size: pet.size,
+            breed: pet.breed,
+            // Temp solution, need to add time to db
+            here_since_date: new Date(pet.here_since_date).toLocaleDateString()
+        }))
+        console.log(formatedData)
+        res.status(200).json(formatedData)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({msg: 'Interval server error'})
+    }
+}
+
+const postInputs = async (req, res) => {
+    const { inputs } = req.body
+    for(let i = 0; i < 4; i++) {
+        params[i] = inputs[i]
+    }
+    res.status(200).send('Params posted.')
+}
+
+
+module.exports = {login, dashboard, adminActions, insertPet, adminSearch, postInputs}
