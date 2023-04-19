@@ -7,11 +7,12 @@ let sort = "short"
 // Handle query and sort in order to return right pets
 const getFilteredProducts = async (req, res) => {
     try {
-        const pool = await connectDB()
+        const pool = await connectDB.getConnection()
         const [pets, fields] = await pool.query(generateQuery(params, sort))
         .catch((err) => {
             console.log(err)
         })
+        pool.release()
 
         const formatedData = pets.map(pet => ({
             id: pet.id,

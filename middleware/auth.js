@@ -9,8 +9,8 @@ const authenticationMiddleware = async (req, res, next) => {
     if (!token) {
         // Auth error
         // throw new APIError('You do not have access to this site.')
-        // res.redirect('/login.html')
-        return res.status(401).json({ msg: 'Log in to access this site.' })
+        return res.redirect('/login.html')
+        // return res.status(401).json({ msg: 'Log in to access this site.' })
     }
     else {
         try {

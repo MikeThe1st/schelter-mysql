@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style_adopted.css">
+    <script defer src="adopted.js"></script>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(36, 34, 34);
+    font-family: "JetBrains Mono", monospace;
+    min-height: 100vh;
+    text-align: center;
+    justify-content: center;
+}
+
+.grid-container {
+    background-color: rgb(131, 114, 20);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4.25rem;
+}
+
+.nav-link {
+    text-decoration: none;
+}
+
+.nav-link button {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  color: #36395A;
+  cursor: pointer;
+  display: inline-flex;
+  height: 3rem;
+  width: 15vh;
+  max-width: 25%;
+  justify-content: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: left;
+  font-size: 2.5vh;
+  font-weight: bold;
+  margin-top: 1vh;
+}
+
+.nav-link button:hover {
+	transform: translateY(-1px);
+    background-color: rgb(179, 170, 170);
+    box-shadow: rgba(54, 45, 75, 0.4) 0 2px 4px,rgba(69, 60, 87, 0.3) 0 7px 13px -3px,#98989e 0 -3px 0 inset;
+}
+
+.nav-link button:not(:last-child) {
+    margin-right: 4%;
+}
+
+.search {
+    display: flex;
+    flex-wrap: wrap;
+    /* height: 5rem; */
+    height: fit-content;
+    width: 100%;
+    background-color: grey;
+    text-align: center;
+    justify-content: center;
+    gap: 5vh;
+    margin-top: 0.2 5rem;
+    padding: 2vw;
+}
+
+.search-description {
+    display: block;
+    font-size: 3vh;
+}
+
+.search-input {
+    max-width: 18vw;
+    height: 2vh;
+    font-size: 2vw;
+    text-align: center;
+}
+
+.searchBtn-container {
+    background-color: green;
+    height: 2rem;
+}
+
+#searchBtn {
+    height: 2rem;
+    width: 4rem;
+}
+
+.sort-container {
+    display: flex;
+    justify-content: flex-end;
+    background-color: goldenrod;
+    height: 2rem;
+    text-align: center;
+}
+
+.sort-label {
+    display: block;
+    text-align: center;
+    margin-top: 0.35rem;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: fit-content;
+    background-color: rgb(168, 131, 9);
+    text-align: center;
+    justify-content: center;
+}
+
+#loading {
+    height: 50vh;
+    margin: 25vh;
+    font-size: 10vh;
+}
+
+
+.edit-container {
+    visibility: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    background-color: rgb(168, 131, 9);
+    padding: 2rem 0;
+    font-weight: bold;
+    font-size: 2vh;
+    margin: 0 auto;
+    border: 0.25rem solid rgb(0, 0, 0);
+    box-shadow: rgba(236, 214, 13, 0.35) 0px 5px 15px;
+}
+
+.edit-form > label {
+    width: 5rem;
+}
+
+#form-title {
+    margin: -1rem 0 1.5rem 0;
+    font-size: 5vh;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.edit-input {
+    display: block;
+    width: 15rem;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.edit-btns-container {
+    margin-top: 1.5rem;
+}
+
+#edit-submitBtn {
+    height: 2.5rem;
+    width: 8rem;
+    margin-right: 2rem;
+    background-color: lightgreen;
+    cursor: pointer;
+}
+
+#edit-cancelBtn {
+    height: 2.5rem;
+    width: 4rem;
+    background-color: red;
+    cursor: pointer;
+}
+
+.pet-cart {
+    width: 100%;
+    height: 5vh;
+    background-color: darkgreen;
+    margin: 0.5vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+
+.pet-text {
+    max-width: 70%;
+    display: flex;
+    font-weight: bold;
+    font-size: 2.5vh;
+}
+
+.btnEdit {
+    display: block;
+}
+
+.btnDelete {
+    display: block;
+}
+
+.footer {
+    width: 100%;
+    height: 3vh;
+    background-color: grey;
+    padding-bottom: 3rem;
+    font-size: 2.75vh;
+    font-weight: 800;
+    margin-top: 4.5rem;
+    padding-top: 0.5rem;
+}
+    </style>
+    <title>Shelter - edit adopted database</title>
+</head>
+
+<body>
+    <div class="grid-container">
+        <a class="nav-bar">
+            <a class="nav-link" href="/">
+                <button class="home">Home</button>
+            </a>
+            <a class="nav-link" href="/adopt.html">
+                <button class="adopt">Adopt</button>
+            </a>
+            <a class="nav-link" href="/contact.html">
+                <button class="contact">Contact</button>
+            </a>
+        </a>
+    </div>
+    <div class="search">
+        <div class="id">
+            <label class="search-description" for="id">Id</label>
+            <input class="search-input" type="number" min="1">
+        </div>
+        <div class="type">
+            <label class="search-description" for="type">Type</label>
+            <input class="search-input" type="text">
+        </div>
+        <div class="size">
+            <label class="search-description" for="size">Size</label>
+            <input class="search-input" type="text">
+        </div>
+        <div class="breed">
+            <label class="search-description" for="breed">Breed</label>
+            <input class="search-input" type="text">
+        </div>
+    </div>
+    <div class="searchBtn-container">
+        <button id="searchBtn">Search</button>
+    </div>
+    <div class="sort-container">
+        <label class="sort-label" for="select-sort">Sort from: </label>
+        <select class="sort-pick" id="select-sort" onchange="sortChange(this.options[this.selectedIndex].value)">
+            <option value="short" default>Shortest staying</option>
+            <option value="long">Longest staying</option>
+        </select>
+    </div>
+    <div class="main">
+        <div id="loading">LOADING...</div>
+        <!-- ! APPENDING DB PETS HERE -->
+    </div>
+    <div class="edit-container">
+        <div id="form-title">Edit pet form</div>
+        <form class="edit-form">
+            <label for="id">Enter id if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked id here">
+
+            <label for="type">Enter type if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked type here">
+
+            <label for="size">Enter size if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked size here">
+
+            <label for="breed">Enter breed if you want to change it:</label>
+            <input class="edit-input" type="text" placeholder="Clicked breed here">
+
+            <label for="date">Enter date if you want to change it:</label>
+            <input class="edit-input" type="date" placeholder="Clicked date here">
+
+            <div class="edit-btns-container">
+                <button id="edit-submitBtn" >Submit changes</button>
+                <button id="edit-cancelBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="footer">All rights reserved to Michal Borowski</div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const searchBtn = document.querySelector('#searchBtn')
+
+let sort = "short"
+
+function sortChange(value) {
+    sort = value
+    searchBtn.click()
+}
+
+async function handlePet(action, btnId) {
+    const data = await axios.post('/dashboard/post-inputs', { action, btnId })
+    console.log(data)
+    return data
+}
+
+async function editPet(btnId) {
+    // Creating array with values that user want to change
+    let editParams = []
+    for (let i = 0; i < 5; i++) {
+        editParams.push(document.querySelectorAll('.edit-input')[i].value)
+    }
+    const action = 'edit'
+    const { data } = await axios.post('/dashboard/post-inputs', { action, btnId, editParams })
+    if (data) {
+        alert(data)
+        searchBtn.click()
+    }
+}
+
+// Showing to_adopt db items on front end
+searchBtn.addEventListener('click', async () => {
+    let DOMinputs = document.querySelectorAll('.search-input')
+    let inputs = []
+    for(let i = 0; i < DOMinputs.length; i++) {
+        inputs.push(DOMinputs[i].value)
+    }
+
+    const db = 'adopted'
+    await axios.post('/dashboard/post-inputs', { inputs, db })
+
+    const main = document.querySelector('.main')
+    main.innerHTML = ''
+    const { data } = await axios.get('/dashboard/adopted/search').catch((err) => {
+        console.log(err)
+    })
+
+    const formatedData = data.map(elem => ({
+        id: elem.id,
+        type: elem.type,
+        size: elem.size,
+        breed: elem.breed,
+        here_since_date: elem.here_since_date
+    }))
+    console.log(formatedData)
+
+    for (let i = 0; i < formatedData.length; i++) {
+        const divWrap = document.createElement('div')
+        divWrap.classList.add('pet-cart')
+        divWrap.setAttribute('id', `Pet Cart ${formatedData[i].id}`)
+
+        // Adding descriptions
+        let div = document.createElement('div')
+        div.classList.add('pet-text')
+        div.innerHTML = `Id:${formatedData[i].id} Type:${formatedData[i].type} Size:${formatedData[i].size} Breed:${formatedData[i].breed}`
+
+        // Adding admin button edit
+        let btnEdit = document.createElement('button')
+        btnEdit.className = "btnEdit"
+        btnEdit.innerHTML = "Edit"
+        btnEdit.addEventListener('click', async (e) => {
+            e.preventDefault()
+            const btnId = btnEdit.parentNode.id.split(' ')[2]
+            document.querySelector('#form-title').innerHTML = `Pet id:${btnId}`
+            document.querySelector('.edit-container').style.visibility = 'visible'
+            document.querySelector('#edit-submitBtn').onclick = async (e) => {
+                e.preventDefault()
+                await editPet(btnId)
+            }
+
+            document.querySelector('#edit-cancelBtn').onclick = (e) => {
+                e.preventDefault()
+                document.querySelector('.edit-container').style.visibility = 'hidden'
+            }
+        })
+
+        // Adding admin button delete
+        let btnDelete = document.createElement('button')
+        btnDelete.className = "btnDelete"
+        btnDelete.innerHTML = "Delete"
+        btnDelete.addEventListener('click', async (e) => {
+            e.preventDefault()
+            const btnId = btnDelete.parentNode.id.split(' ')[2]
+            let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
+            if (confirm(confiramtion)) {
+                await handlePet('delete', btnId)
+                searchBtn.click()
+            }
+        })
+
+        // Adding admin button adopted
+        let btnAdopted = document.createElement('button')
+        btnAdopted.className = "btnAdopted"
+        btnAdopted.innerHTML = "Adopted"
+        btnAdopted.addEventListener('click', async (e) => {
+            e.preventDefault()
+            await handlePet('adopted', btnAdopted.parentNode.id.split(' ')[2])
+            searchBtn.click()
+        })
+
+        // Appending divs
+        main.appendChild(divWrap)
+        divWrap.appendChild(div)
+        divWrap.appendChild(btnEdit)
+        divWrap.appendChild(btnAdopted)
+        divWrap.appendChild(btnDelete)
+    }
+})
+
+// First load of pets from DB
+window.addEventListener('load', () => {
+    searchBtn.click()
+    const loadingDiv = document.querySelector('#loading')
+    loadingDiv.style.display = "none"
+})
+
+
+    </script>
+</body>
+
+</html>

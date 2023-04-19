@@ -1,4 +1,4 @@
-const {connectDB} = require('../db/connect')
+const { connectDB } = require('../db/connect')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const fs = require('fs')
@@ -12,17 +12,19 @@ const login = async (req, res) => {
         const { username, password } = req.body
         const decodedUsername = jwt.sign(username, process.env.JWT_SECRET)
         const decodedPassword = jwt.sign(password, process.env.JWT_SECRET)
-        const pool = await connectDB()
+
+        const pool = await connectDB.getConnection()
         const [rows, fields] = await pool.execute('SELECT * FROM admins WHERE username = ? AND password = ?', [decodedUsername, decodedPassword])
+        pool.release()
 
         // Making sure that I'm getting one user and encoding matched user
-        if(rows.length == 1) {
+        if (rows.length == 1) {
             const encodedUsername = jwt.verify(rows[0].username, process.env.JWT_SECRET)
             const encodedPassword = jwt.verify(rows[0].password, process.env.JWT_SECRET)
             const token = decodedUsername
             // Saving token to express-session
             req.session.token = token
-            res.status(200).send({encodedUsername, encodedPassword, token})
+            res.status(200).send({ encodedUsername, encodedPassword, token })
         }
     } catch (err) {
         console.log(err)
@@ -30,37 +32,54 @@ const login = async (req, res) => {
     }
 }
 
-// Reading dashboard page
-const dashboard = async (req, res) => {
-    fs.readFile('./private/dashboard.html', (err, data) => {
+// Loading dashboard page
+const dashboard = (req, res) => {
+    loadFile('./private/dashboard.html', res)
+    console.log('Welcome to admin dashboard.')
+}
+
+// Loading to-adopt dashboard
+const toAdopt = (req, res) => {
+    loadFile('./private/to-adopt.html', res)
+    console.log('Welcome to to-adopt DB dashboard.')
+}
+
+const adopted = (req, res) => {
+    loadFile('./private/adopted.html', res)
+    console.log('Welcome to adopted DB dashboard.')
+}
+
+function loadFile(path, response) {
+    const data = fs.readFile(path, (err, data) => {
         if (err) {
             console.log(err)
-            res.status(500).send('Error loading page')
-        } 
-        else {
-            res.write(data)
+            response.status(500).send('Error during loading page.')
         }
-      })
-    console.log('Welcome to admin dashboard')
+        else {
+            response.writeHead(200, {'Content-type': 'text/html'})
+            response.write(data)
+            response.end()
+        }
+    })
 }
 
 const adminActions = async (req, res) => {
     try {
-        const {action, btnId, db} = req.body
-        const pool = await connectDB()
-        if(db) currentDb = db
+        const { action, btnId, db } = req.body
+        const pool = await connectDB.getConnection()
+        if (db) currentDb = db
 
         // Editing values of specyfic pet
-        if(action == 'edit') {
+        if (action == 'edit') {
             const { editParams } = req.body
             let [pets, fields] = await pool.query(`SELECT * FROM ${currentDb} WHERE id="${btnId}"`)
-            
+
             let editString = `UPDATE ${currentDb} SET `
             let propertyCounter = 0, toEdit = false
-            if(pets.length === 1) {
-                for(let property in pets[0]) {
-                    if(editParams[propertyCounter]) {
-                        if(toEdit) {
+            if (pets.length === 1) {
+                for (let property in pets[0]) {
+                    if (editParams[propertyCounter]) {
+                        if (toEdit) {
                             editString += ', '
                         }
                         toEdit = true
@@ -73,19 +92,18 @@ const adminActions = async (req, res) => {
                 await pool.query(editString).catch((err) => {
                     console.log(err)
                 })
-
                 res.status(200).send(`Pet with id:${btnId} got edited.`)
             }
         }
 
         // If pet gets adopted then it gets removed from to_adopted and inserted into adopted DB
-        else if(action == 'adopted') {
+        else if (action == 'adopted') {
             const [pets, fields] = await pool.query(`SELECT * FROM ${currentDb} WHERE id="${btnId}";`)
-            if(pets.length == 1) {
+            if (pets.length == 1) {
                 await pool.query(`DELETE FROM ${currentDb} WHERE id="${btnId}";`)
 
                 let opositeDb = undefined
-                if(currentDb == 'to_adopt') opositeDb = 'adopted'
+                if (currentDb == 'to_adopt') opositeDb = 'adopted'
                 else opositeDb = 'to_adopt'
 
                 await pool.query(`INSERT INTO ${opositeDb} VALUES(${btnId}, "${pets[0].type}", "${pets[0].size}", "${pets[0].breed}", "${pets[0].here_since_date.toLocaleDateString()}");`)
@@ -94,15 +112,17 @@ const adminActions = async (req, res) => {
         }
 
         // Deleting single pet (used in case of mistake)
-        else if(action == 'delete') {
+        else if (action == 'delete') {
             await pool.query(`DELETE FROM ${currentDb} WHERE id="${btnId}";`)
-            .catch((err) => {
-                console.log(err)
-            })
+                .catch((err) => {
+                    console.log(err)
+                })
+            res.status(200).send(`Pet with id:${btnId} just got deleted`)
         }
         else {
             res.status(404).send('Action not found.')
         }
+        pool.release()
     } catch (err) {
         console.log(err)
         res.status(500).send('Internal server error')
@@ -112,9 +132,9 @@ const adminActions = async (req, res) => {
 const insertPet = async (req, res) => {
     try {
         const { insertParams } = req.body
-        const pool = await connectDB()
-        const {data} = pool.query(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
-
+        const pool = await connectDB.getConnection()
+        const { data } = await pool.query(`INSERT INTO to_adopt VALUES (${insertParams[0]}, "${insertParams[1]}", "${insertParams[2]}", "${insertParams[3]}", NOW());`)
+        pool.release()
         res.status(200).send(`New pet with id:${insertParams[0]} got created.`)
     } catch (err) {
         console.log(err)
@@ -124,39 +144,39 @@ const insertPet = async (req, res) => {
 
 const adminSearch = async (req, res) => {
     try {
-        const pool = await connectDB()
-        .catch((err) => {
-            console.log(err)
-        })
+        const pool = await connectDB.getConnection()
+            .catch((err) => {
+                console.log(err)
+            })
         console.log(params)
 
         // Generating query
         let edited = false
         let queryString = `SELECT * FROM ${currentDb}`
-        if(params[0] != '') {
+        if (params[0] != '') {
             queryString += ` WHERE id=${params[0]}`
             edited = true
         }
-        if(params[1] != '') {
-            if(edited) {
+        if (params[1] != '') {
+            if (edited) {
                 queryString += ` AND type="${params[1]}"`
             }
             else {
                 queryString += ` WHERE type="${params[1]}"`
                 edited = true
             }
-        } 
-        if(params[2] != '') {
-            if(edited) {
+        }
+        if (params[2] != '') {
+            if (edited) {
                 queryString += ` AND size="${params[2]}"`
             }
             else {
                 queryString += ` WHERE size="${params[2]}"`
                 edited = true
             }
-        } 
-        if(params[3] != '') {
-            if(edited) {
+        }
+        if (params[3] != '') {
+            if (edited) {
                 queryString += ` AND breed="${params[3]}"`
             }
             else {
@@ -167,7 +187,7 @@ const adminSearch = async (req, res) => {
         queryString += `;`
         console.log(queryString)
         const [pets, fields] = await pool.query(queryString)
-
+        pool.release()
         const formatedData = pets.map(pet => ({
             id: pet.id,
             type: pet.type,
@@ -181,26 +201,20 @@ const adminSearch = async (req, res) => {
         res.status(200).json(formatedData)
     } catch (error) {
         console.log(error)
-        res.status(500).json({msg: 'Interval server error'})
+        res.status(500).json({ msg: 'Interval server error' })
     }
 }
 
 const postInputs = async (req, res) => {
     try {
-        const { db, inputs, editParams } = req.body
-        // if(!editParams) {
-            params = inputs    
-        // }
-        // else {
-        //     params = editParams
-        //     console.log("Hello world")
-        // }
+        const { db, inputs } = req.body
+        params = inputs
         currentDb = db
-        res.status(200).send(`Posted inputs: ${params}`) 
+        res.status(200).send(`Posted inputs: ${params}`)
     } catch (err) {
         console.log(err)
     }
 }
 
 
-module.exports = {login, dashboard, adminActions, insertPet, adminSearch, postInputs}
+module.exports = { login, dashboard, adminActions, insertPet, adminSearch, postInputs, toAdopt, adopted }
