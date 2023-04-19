@@ -22,6 +22,7 @@ router.route('/dashboard/to-adopt').post(adminActions)
 router.route('/dashboard/post-inputs').post(postInputs)
 router.route('/dashboard/to-adopt/search').get(adminSearch)
 router.route('/dashboard/edit-pet').put(adminActions)
+// router.route('/dashboard/delete-pet').delete(adminActions)
 
 router.route('/dashboard/adopted/search').post(postInputs)
 router.route('/dashboard/adopted/search').get(adminSearch)

@@ -92,7 +92,13 @@ function deleteBtn() {
         const btnId = btnDelete.parentNode.id.split(' ')[2]
         let confiramtion = `Are you sure about deleting pet with id:${btnId}?`
         if (confirm(confiramtion)) {
-            await handlePet('delete', btnId)
+            console.log('about to delete')
+            // const test = await handlePet('delete', btnId)
+            const action = 'delete'
+            const db = 'to_adopt'
+            // !!! DELETE NOT FOUND - 404, temp solution with post, in this case searchBtn click is not executed = you need to reload yourself
+            const test = await axios.post('/dashboard/to-adopt', { action, db, btnId })
+            console.log(test)
             searchBtn.click()
         }
     })
@@ -101,8 +107,7 @@ function deleteBtn() {
 
 // Showing to_adopt db items on front end
 searchBtn.addEventListener('click', async () => {
-    let inputs = await handleInputs()
-    // let parsedData = JSON.parse(inputs.config.data).inputs
+    await handleInputs()
 
     const main = document.querySelector('.main')
     main.innerHTML = ''
@@ -154,6 +159,10 @@ insertBtn.addEventListener('click', async () => {
     }
     const { data } = await axios.post('/dashboard/insert-pet', { insertParams })
     alert(data)
+    let DOMinputs = document.querySelectorAll('.search-input')
+    for (let i = 0; i < DOMinputs.length; i++) {
+        DOMinputs[i].value = ''
+    }
     searchBtn.click()
 })
 
