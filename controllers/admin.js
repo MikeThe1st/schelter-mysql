@@ -1,7 +1,9 @@
 const { connectDB } = require('../db/connect')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 require('dotenv').config()
 const fs = require('fs')
+
 let params = []
 let currentDb = undefined
 
@@ -10,21 +12,25 @@ const login = async (req, res) => {
     // Getting username and password from client-side then decoding it and pasting as query params
     try {
         const { username, password } = req.body
-        const decodedUsername = jwt.sign(username, process.env.JWT_SECRET)
-        const decodedPassword = jwt.sign(password, process.env.JWT_SECRET)
 
         const pool = await connectDB.getConnection()
-        const [rows, fields] = await pool.execute('SELECT * FROM admins WHERE username = ? AND password = ?', [decodedUsername, decodedPassword])
+        const [rows, fields] = await pool.execute('SELECT * FROM admins WHERE username = ?;', [username])
         pool.release()
-
+        
         // Making sure that I'm getting one user and encoding matched user
-        if (rows.length == 1) {
-            const encodedUsername = jwt.verify(rows[0].username, process.env.JWT_SECRET)
-            const encodedPassword = jwt.verify(rows[0].password, process.env.JWT_SECRET)
-            const token = decodedUsername
+        if (rows.length === 1) {
+            const match = await bcrypt.compare(password, rows[0].password)
+            console.log(match)
             // Saving token to express-session
-            req.session.token = token
-            res.status(200).send({ encodedUsername, encodedPassword, token })
+            if(match) {
+                const token = jwt.sign({username: username, password: rows[0].password}, process.env.JWT_SECRET)
+                req.session.token = token
+                return res.status(200).send('Successfull login')
+            }
+            return res.status(401).send('Access denied. You do not have permission to access dashboard.')
+        }
+        else if(rows.length === 0) {
+            res.status(401).send('Invalid username')
         }
     } catch (err) {
         console.log(err)

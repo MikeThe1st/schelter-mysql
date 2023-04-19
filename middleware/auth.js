@@ -9,15 +9,18 @@ const authenticationMiddleware = async (req, res, next) => {
     if (!token) {
         // Auth error
         // throw new APIError('You do not have access to this site.')
-        return res.redirect('/login.html')
-        // return res.status(401).json({ msg: 'Log in to access this site.' })
+        // return res.redirect('/login.html')
+        return res.status(401).json({ msg: 'Log in to access this site.' })
     }
     else {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            if (decoded !== 'admin') return console.log('Access denied. You do not have permission to access dashboard.')
-            return next()
-        } catch (ex) {
+            const { username } = decoded
+            if(username !== 'admin') {
+                return res.status(401).send('Access denied. You do not have permission to access dashboard.')
+            }
+            next()
+        } catch (err) {
             // return console.log('Invalid token.')
             return res.status(400).json({ msg: 'Invalid token.' })
             // throw new APIError('Invalid token.')
