@@ -25,6 +25,7 @@ router.route('/dashboard/adopted').post(authenticationMiddleware, adminActions)
 router.route('/dashboard/post-inputs').post(authenticationMiddleware, postInputs)
 router.route('/dashboard/to-adopt/search').get(authenticationMiddleware, adminSearch)
 router.route('/dashboard/edit-pet').put(authenticationMiddleware, adminActions)
+router.route('/dashboard/adopted').put(authenticationMiddleware, adminActions)
 // router.route('/dashboard/delete-pet').delete(adminActions)
 
 router.route('/dashboard/adopted/search').post(authenticationMiddleware, postInputs)

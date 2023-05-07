@@ -319,7 +319,8 @@
             }
             
             async function handlePet(action, btnId) {
-                const data = await axios.post('/dashboard/post-inputs', { action, btnId })
+                const db ='to_adopt'
+                const data = await axios.post('/dashboard/adopted', { action, btnId, db })
                 console.log(data)
                 return data
             }

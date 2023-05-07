@@ -5,7 +5,6 @@ require('dotenv').config()
 
 const authenticationMiddleware = async (req, res, next) => {
     const token = req.session.token
-    console.log(token)
     if (!token) {
         // Auth error
         // throw new APIError('You do not have access to this site.')
